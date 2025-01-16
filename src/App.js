@@ -1,25 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./App.scss";
+import TodoInsert from "./components/TodoInsert";
+import TodoTemplate from "./components/TodoTemplate";
+import TodoList from "./components/TodoList";
 
-function App() {
+const App = () => {
+  //id, text, checked
+  const [todos, setTodos] = useState([
+    {id:1, text:"리액트의 기초 알아보기", checked:false},
+    {id:2, text:"컴포넌트 스타일링 해보기", checked:true}
+  ]);
+  const handleInsert = (value)=>{
+    const todo = {id: todos.length+1, text:value, checked:false};
+    setTodos([...todos,todo]);
+  } 
+  const handleChecked = (id)=>{
+    const toggle =  todos.map((list)=>{
+      return (list.id === id) ? {id:list.id, text:list.text, checked:!list.checked} : list;
+    })
+    setTodos(toggle);
+    // setTodos(
+    //   todos.map( (list)=>{
+    //     return list.id === id ? {...list, checked:!list.checked} : list
+    //   })
+    // );
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <TodoTemplate>
+        <TodoInsert onInsert={handleInsert}/>
+        <TodoList todos={todos} onChecked={handleChecked}/>
+      </TodoTemplate>
     </div>
   );
-}
+};
 
 export default App;
